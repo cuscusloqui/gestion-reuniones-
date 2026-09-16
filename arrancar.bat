@@ -5,7 +5,7 @@ rem Arranca Gestion de Reuniones en una ventana minimizada identificable por su 
 rem con el log redirigido a fichero. Espera a que responda y, si falla, muestra el log
 rem aqui mismo (la ventana lanzada se cierra sola si el proceso muere, y si no
 rem guardaramos el log no habria forma de ver el motivo).
-rem Usa stop.bat para detenerla.
+rem Usa parar.bat para detenerla.
 
 cd /d "%~dp0"
 

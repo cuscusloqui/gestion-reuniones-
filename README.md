@@ -27,6 +27,21 @@ herramientas (incluido Claude Code).
 
 La aplicación arranca en `http://localhost:8081/gestion-reuniones` y muestra el calendario del mes actual.
 
+### Scripts de Windows
+
+Para uso diario sin depender de Maven, hay dos `.bat` en la raíz del proyecto (requieren el JAR
+ya construido; lo compilan solos si falta):
+
+```bat
+arrancar.bat
+parar.bat
+```
+
+`arrancar.bat` compila si hace falta, lanza la app en una ventana minimizada, espera a que
+responda y abre... bueno, te dice la URL para que la abras tú. Si la aplicación se cae nada más
+arrancar, vuelca el log (`gestion-reuniones.log`) en la misma consola en vez de dejar una ventana
+en blanco que se cierra sola. `parar.bat` la detiene localizándola por el título de su ventana.
+
 ## Construir el JAR ejecutable
 
 ```bash

@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-rem Para la aplicacion arrancada con start.bat, localizandola UNICAMENTE por el titulo
+rem Para la aplicacion arrancada con arrancar.bat, localizandola UNICAMENTE por el titulo
 rem de su ventana ("GestionReuniones"). Deliberadamente NO se mata "lo que haya" en el
 rem puerto: podria ser un proceso de otro proyecto y no es seguro asumir que es el nuestro.
 

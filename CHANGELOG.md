@@ -13,8 +13,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ### Added
 
-- Scripts `start.bat`/`stop.bat` para arrancar y parar la aplicación empaquetada, localizándola
+- Scripts `arrancar.bat`/`parar.bat` para arrancar y parar la aplicación empaquetada, localizándola
   por el título de su ventana (sin depender de PowerShell ni matar procesos ajenos por puerto).
+  Se renombraron desde `start.bat`/`stop.bat` porque `start` colisiona con el comando interno
+  de Windows del mismo nombre. `arrancar.bat` guarda el log en `gestion-reuniones.log`, espera
+  activamente a que la app responda y, si el proceso muere nada más lanzarse, vuelca el log en
+  la misma consola en vez de dejar una ventana en blanco que se cierra sola.
 - Colección Postman (`postman/Gestion-Reuniones.postman_collection.json`) con todos los
   endpoints de `/api/reuniones`.
 
