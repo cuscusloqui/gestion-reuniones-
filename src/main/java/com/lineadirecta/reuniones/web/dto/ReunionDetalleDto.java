@@ -3,13 +3,14 @@ package com.lineadirecta.reuniones.web.dto;
 import com.lineadirecta.reuniones.domain.Reunion;
 
 import java.time.Instant;
+import java.util.List;
 
 public record ReunionDetalleDto(
         Long id,
         String titulo,
         Instant fechaInicio,
         Instant fechaFin,
-        String intervinientes,
+        List<String> intervinientes,
         String contenidoHtml,
         String contenidoTexto,
         Instant fechaCreacion,

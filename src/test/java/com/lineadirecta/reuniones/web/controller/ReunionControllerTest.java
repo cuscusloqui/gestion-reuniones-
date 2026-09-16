@@ -116,6 +116,36 @@ class ReunionControllerTest {
     }
 
     @Test
+    void intervinientesSeGuardanYSePuedenAnadirOQuitarEnUnaActualizacion() throws Exception {
+        Map<String, Object> crearBody = Map.of(
+                "titulo", "Reunion con participantes",
+                "fechaInicio", Instant.now().toString(),
+                "intervinientes", java.util.List.of("Ana", "Luis")
+        );
+
+        String respuestaCrear = mockMvc.perform(post("/api/reuniones")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(crearBody)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.intervinientes", org.hamcrest.Matchers.contains("Ana", "Luis")))
+                .andReturn().getResponse().getContentAsString();
+
+        long id = objectMapper.readTree(respuestaCrear).get("id").asLong();
+
+        Map<String, Object> actualizarBody = Map.of(
+                "titulo", "Reunion con participantes",
+                "fechaInicio", Instant.now().toString(),
+                "intervinientes", java.util.List.of("Luis", "Marta")
+        );
+
+        mockMvc.perform(put("/api/reuniones/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(actualizarBody)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.intervinientes", org.hamcrest.Matchers.contains("Luis", "Marta")));
+    }
+
+    @Test
     void eliminarReunionExistenteDevuelve204YLuego404() throws Exception {
         Long id = crearReunion("Reunion a eliminar", null);
 

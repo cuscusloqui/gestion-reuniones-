@@ -576,6 +576,66 @@ main#calendar-root {
   font-family: inherit;
 }
 
+/* ---------- Tags input (intervinientes) ---------- */
+
+.tags-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 6px 8px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.tags-input:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #eef2ff;
+  color: var(--accent-dark);
+  border-radius: 6px;
+  padding: 3px 6px 3px 10px;
+  font-size: 0.82rem;
+  animation: pop-in 150ms ease;
+}
+
+.tag-chip button {
+  border: none;
+  background: transparent;
+  color: var(--accent-dark);
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0;
+  transition: background 150ms ease;
+}
+
+.tag-chip button:hover {
+  background: rgba(79, 70, 229, 0.18);
+}
+
+.tags-input input[type="text"] {
+  flex: 1;
+  min-width: 140px;
+  border: none;
+  outline: none;
+  padding: 4px 2px;
+  font-size: 0.9rem;
+}
+
 /* ---------- Rich editor ---------- */
 
 .editor-toolbar {

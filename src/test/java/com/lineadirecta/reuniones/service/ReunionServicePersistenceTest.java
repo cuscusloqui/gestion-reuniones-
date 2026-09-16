@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -99,7 +100,7 @@ class ReunionServicePersistenceTest {
     void buscarConQHaceOrEntreTituloContenidoEIntervinientes() {
         Instant ahora = Instant.now();
         crear("Reunion presupuesto", ahora, null, "<p>hablamos de marketing</p>");
-        crear("Otra reunion", ahora, "Equipo de marketing", null);
+        crear("Otra reunion", ahora, List.of("Equipo de marketing"), null);
         crear("Sin relacion", ahora, null, null);
 
         var pagina = service.buscar(null, null, null, null, null, "marketing", PageRequest.of(0, 10));
@@ -111,15 +112,26 @@ class ReunionServicePersistenceTest {
     @Test
     void buscarConQEIntervinienteCombinaConAnd() {
         Instant ahora = Instant.now();
-        crear("Reunion A", ahora, "Carlos, Marketing", null);
-        crear("Reunion marketing", ahora, "Solo Ana", null);
+        crear("Reunion A", ahora, List.of("Carlos", "Marketing"), null);
+        crear("Reunion marketing", ahora, List.of("Ana"), null);
 
         var pagina = service.buscar(null, null, null, null, "carlos", "marketing", PageRequest.of(0, 10));
 
         assertThat(pagina.getContent()).extracting(Reunion::getTitulo).containsExactly("Reunion A");
     }
 
-    private void crear(String titulo, Instant fechaInicio, String intervinientes, String contenidoHtml) {
+    @Test
+    void buscarSoloConIntervinienteFiltraPorParticipante() {
+        Instant ahora = Instant.now();
+        crear("Reunion con Ana", ahora, List.of("Ana Garcia", "Luis"), null);
+        crear("Reunion sin Ana", ahora, List.of("Pedro"), null);
+
+        var pagina = service.buscar(null, null, null, null, "ana", null, PageRequest.of(0, 10));
+
+        assertThat(pagina.getContent()).extracting(Reunion::getTitulo).containsExactly("Reunion con Ana");
+    }
+
+    private void crear(String titulo, Instant fechaInicio, List<String> intervinientes, String contenidoHtml) {
         service.crear(new ReunionRequestDto(titulo, fechaInicio, null, intervinientes, contenidoHtml));
     }
 }

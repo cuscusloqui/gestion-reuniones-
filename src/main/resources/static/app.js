@@ -14,6 +14,7 @@
     edicionId: null,
     editorSucio: false,
     lastRange: null,
+    editorIntervinientes: [],
     busqueda: { page: 0, size: 10, totalPages: 0, filtros: {} },
   };
 
@@ -593,17 +594,73 @@
     return canvas.toDataURL(tipoSalida, 0.85);
   }
 
+  // ---------- Chips de intervinientes ----------
+
+  function renderizarIntervinientesTags() {
+    const contenedor = document.getElementById("intervinientes-tags");
+    const input = document.getElementById("input-interviniente-nuevo");
+    contenedor.querySelectorAll(".tag-chip").forEach((chip) => chip.remove());
+
+    estado.editorIntervinientes.forEach((nombre, indice) => {
+      const chip = document.createElement("span");
+      chip.className = "tag-chip";
+      const texto = document.createElement("span");
+      texto.textContent = nombre;
+      const quitar = document.createElement("button");
+      quitar.type = "button";
+      quitar.setAttribute("aria-label", `Quitar a ${nombre}`);
+      quitar.textContent = "×";
+      quitar.addEventListener("click", () => {
+        estado.editorIntervinientes.splice(indice, 1);
+        renderizarIntervinientesTags();
+        marcarEditorSucio();
+      });
+      chip.appendChild(texto);
+      chip.appendChild(quitar);
+      contenedor.insertBefore(chip, input);
+    });
+  }
+
+  function agregarIntervinienteDesdeInput() {
+    const input = document.getElementById("input-interviniente-nuevo");
+    const nombre = input.value.trim();
+    if (!nombre) return;
+    if (!estado.editorIntervinientes.some((n) => n.toLowerCase() === nombre.toLowerCase())) {
+      estado.editorIntervinientes.push(nombre);
+      renderizarIntervinientesTags();
+      marcarEditorSucio();
+    }
+    input.value = "";
+  }
+
+  function inicializarIntervinientesInput() {
+    const input = document.getElementById("input-interviniente-nuevo");
+    input.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter" || ev.key === ",") {
+        ev.preventDefault();
+        agregarIntervinienteDesdeInput();
+      } else if (ev.key === "Backspace" && input.value === "" && estado.editorIntervinientes.length > 0) {
+        estado.editorIntervinientes.pop();
+        renderizarIntervinientesTags();
+        marcarEditorSucio();
+      }
+    });
+    input.addEventListener("blur", agregarIntervinienteDesdeInput);
+  }
+
   // ---------- Modal editor de reunion ----------
 
   function abrirEditor(reunion, fechaPreseleccionada) {
     estado.edicionId = reunion ? reunion.id : null;
     estado.editorSucio = false;
     estado.lastRange = null;
+    estado.editorIntervinientes = reunion && reunion.intervinientes ? reunion.intervinientes.slice() : [];
 
     document.getElementById("editor-titulo-modal").textContent = reunion ? "Editar reunión" : "Nueva reunión";
     document.getElementById("btn-eliminar").hidden = !reunion;
     document.getElementById("input-titulo").value = reunion ? reunion.titulo : "";
-    document.getElementById("input-intervinientes").value = reunion ? (reunion.intervinientes || "") : "";
+    document.getElementById("input-interviniente-nuevo").value = "";
+    renderizarIntervinientesTags();
     richEditor().innerHTML = reunion ? (reunion.contenidoHtml || "") : "";
 
     const inicio = reunion ? fechaDesdeIso(reunion.fechaInicio) : (fechaPreseleccionada || new Date());
@@ -618,7 +675,7 @@
   function hayDatosEnEditor() {
     return (
       document.getElementById("input-titulo").value.trim() !== "" ||
-      document.getElementById("input-intervinientes").value.trim() !== "" ||
+      estado.editorIntervinientes.length > 0 ||
       richEditor().innerHTML.trim() !== ""
     );
   }
@@ -631,6 +688,8 @@
   }
 
   async function guardarReunion() {
+    agregarIntervinienteDesdeInput();
+
     const titulo = document.getElementById("input-titulo").value.trim();
     const inicioValor = document.getElementById("input-inicio").value;
     const finValor = document.getElementById("input-fin").value;
@@ -642,7 +701,7 @@
       titulo,
       fechaInicio: isoDesdeInputLocal(inicioValor),
       fechaFin: finValor ? isoDesdeInputLocal(finValor) : null,
-      intervinientes: document.getElementById("input-intervinientes").value.trim() || null,
+      intervinientes: estado.editorIntervinientes.slice(),
       contenidoHtml: richEditor().innerHTML,
     };
 
@@ -689,9 +748,9 @@
       document.getElementById("detalle-fechas").textContent = rangoFechas;
 
       const wrap = document.getElementById("detalle-intervinientes-wrap");
-      if (reunion.intervinientes) {
+      if (reunion.intervinientes && reunion.intervinientes.length > 0) {
         wrap.hidden = false;
-        document.getElementById("detalle-intervinientes").textContent = reunion.intervinientes;
+        document.getElementById("detalle-intervinientes").textContent = reunion.intervinientes.join(", ");
       } else {
         wrap.hidden = true;
       }
@@ -806,7 +865,8 @@
 
       const meta = document.createElement("div");
       meta.className = "r-meta";
-      meta.textContent = formatoFechaHora.format(fechaDesdeIso(r.fechaInicio)) + (r.intervinientes ? " · " + r.intervinientes : "");
+      const intervinientesTexto = r.intervinientes && r.intervinientes.length > 0 ? r.intervinientes.join(", ") : "";
+      meta.textContent = formatoFechaHora.format(fechaDesdeIso(r.fechaInicio)) + (intervinientesTexto ? " · " + intervinientesTexto : "");
 
       const fragmento = document.createElement("div");
       fragmento.className = "r-fragmento";
@@ -865,6 +925,7 @@
     document.getElementById("pag-siguiente").addEventListener("click", () => ejecutarBusqueda(estado.busqueda.page + 1));
 
     inicializarEditorRichText();
+    inicializarIntervinientesInput();
     cambiarVista("month");
   }
 

@@ -2,6 +2,22 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- `intervinientes` pasa de ser un texto libre a una lista real de participantes
+  (`@ElementCollection` en `Reunion`, `List<String>` en los DTOs). El editor permite añadir y
+  quitar participantes uno a uno mediante chips; la búsqueda por interviniente/`q` ahora hace
+  `JOIN` sobre la colección en vez de un `LIKE` sobre una cadena.
+
+### Added
+
+- Scripts `start.bat`/`stop.bat` para arrancar y parar la aplicación empaquetada, localizándola
+  por el título de su ventana (sin depender de PowerShell ni matar procesos ajenos por puerto).
+- Colección Postman (`postman/Gestion-Reuniones.postman_collection.json`) con todos los
+  endpoints de `/api/reuniones`.
+
 ## [0.1.0] - 2026-09-16
 
 ### Added

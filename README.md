@@ -62,7 +62,7 @@ curl -X POST http://localhost:8080/api/reuniones \
     "titulo": "Reunión de arquitectura",
     "fechaInicio": "2026-09-20T09:00:00Z",
     "fechaFin": "2026-09-20T10:00:00Z",
-    "intervinientes": "Carlos, Ana",
+    "intervinientes": ["Carlos", "Ana"],
     "contenidoHtml": "<p>Puntos a tratar: <strong>diseño de la API</strong></p>"
   }'
 ```
@@ -78,9 +78,15 @@ curl -X PUT http://localhost:8080/api/reuniones/1 \
     "titulo": "Reunión de arquitectura (revisada)",
     "fechaInicio": "2026-09-20T09:00:00Z",
     "fechaFin": "2026-09-20T10:30:00Z",
+    "intervinientes": ["Carlos", "Luis"],
     "contenidoHtml": "<p>Contenido actualizado</p>"
   }'
 ```
+
+> `intervinientes` es una lista de nombres (array JSON), no un texto libre. Cada actualización
+> envía la lista completa deseada: para añadir un participante, inclúyelo en el array; para
+> quitarlo, simplemente omítelo. No hay endpoints separados de alta/baja de participantes: se
+> guarda de forma explícita, como el resto de la reunión.
 
 ### Listar con filtros combinados
 

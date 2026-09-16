@@ -1,16 +1,24 @@
 package com.lineadirecta.reuniones.domain;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Entidad JPA que representa una reunion. No se expone directamente en la API: la frontera usa DTOs.
@@ -34,8 +42,11 @@ public class Reunion {
 
     private Instant fechaFin;
 
-    @Column(length = 2000)
-    private String intervinientes;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "reunion_interviniente", joinColumns = @JoinColumn(name = "reunion_id"))
+    @OrderColumn(name = "posicion")
+    @Column(name = "nombre", length = 200, nullable = false)
+    private List<String> intervinientes = new ArrayList<>();
 
     @Column(columnDefinition = "CLOB")
     private String contenidoHtml;
@@ -53,12 +64,12 @@ public class Reunion {
         // Requerido por JPA
     }
 
-    public Reunion(String titulo, Instant fechaInicio, Instant fechaFin, String intervinientes,
+    public Reunion(String titulo, Instant fechaInicio, Instant fechaFin, List<String> intervinientes,
                     String contenidoHtml, String contenidoTexto) {
         this.titulo = titulo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.intervinientes = intervinientes;
+        setIntervinientes(intervinientes);
         this.contenidoHtml = contenidoHtml;
         this.contenidoTexto = contenidoTexto;
     }
@@ -103,12 +114,22 @@ public class Reunion {
         this.fechaFin = fechaFin;
     }
 
-    public String getIntervinientes() {
-        return intervinientes;
+    public List<String> getIntervinientes() {
+        return Collections.unmodifiableList(intervinientes);
     }
 
-    public void setIntervinientes(String intervinientes) {
-        this.intervinientes = intervinientes;
+    /**
+     * Sustituye la lista completa de intervinientes (se guarda de forma explicita, sin fusion
+     * parcial): normaliza espacios y descarta entradas vacias.
+     */
+    public void setIntervinientes(List<String> nuevosIntervinientes) {
+        intervinientes.clear();
+        if (nuevosIntervinientes != null) {
+            nuevosIntervinientes.stream()
+                    .filter(nombre -> nombre != null && !nombre.isBlank())
+                    .map(String::trim)
+                    .forEach(intervinientes::add);
+        }
     }
 
     public String getContenidoHtml() {

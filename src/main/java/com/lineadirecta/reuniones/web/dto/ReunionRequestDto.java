@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
+import java.util.List;
 
 public record ReunionRequestDto(
         @NotBlank(message = "El titulo es obligatorio")
@@ -16,8 +17,9 @@ public record ReunionRequestDto(
 
         Instant fechaFin,
 
-        @Size(max = 2000, message = "Los intervinientes no pueden superar los 2000 caracteres")
-        String intervinientes,
+        List<@NotBlank(message = "Un interviniente no puede estar vacio")
+             @Size(max = 200, message = "El nombre de un interviniente no puede superar los 200 caracteres")
+             String> intervinientes,
 
         String contenidoHtml
 ) {

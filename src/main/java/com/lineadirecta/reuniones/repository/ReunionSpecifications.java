@@ -1,6 +1,8 @@
 package com.lineadirecta.reuniones.repository;
 
 import com.lineadirecta.reuniones.domain.Reunion;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -50,7 +52,11 @@ public final class ReunionSpecifications {
             return null;
         }
         String patron = "%" + interviniente.toLowerCase() + "%";
-        return (root, query, cb) -> cb.like(cb.lower(root.get("intervinientes")), patron);
+        return (root, query, cb) -> {
+            query.distinct(true);
+            Join<Reunion, String> intervinientes = root.join("intervinientes", JoinType.LEFT);
+            return cb.like(cb.lower(intervinientes), patron);
+        };
     }
 
     /**
@@ -62,9 +68,11 @@ public final class ReunionSpecifications {
         }
         String patron = "%" + q.toLowerCase() + "%";
         return (root, query, cb) -> {
+            query.distinct(true);
+            Join<Reunion, String> intervinientes = root.join("intervinientes", JoinType.LEFT);
             Predicate porTitulo = cb.like(cb.lower(root.get("titulo")), patron);
             Predicate porContenido = cb.like(cb.lower(root.get("contenidoTexto")), patron);
-            Predicate porIntervinientes = cb.like(cb.lower(root.get("intervinientes")), patron);
+            Predicate porIntervinientes = cb.like(cb.lower(intervinientes), patron);
             return cb.or(porTitulo, porContenido, porIntervinientes);
         };
     }

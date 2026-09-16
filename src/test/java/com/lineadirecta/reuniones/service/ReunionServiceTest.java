@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,7 +41,7 @@ class ReunionServiceTest {
 
         Instant inicio = Instant.now();
         ReunionRequestDto request = new ReunionRequestDto(
-                "Reunion de seguimiento", inicio, null, "Ana, Luis",
+                "Reunion de seguimiento", inicio, null, List.of("Ana", "Luis"),
                 "<p>Puntos: <strong>uno</strong></p><img src=\"data:image/png;base64,AAAA\">");
 
         Reunion creada = service.crear(request);
@@ -53,7 +54,22 @@ class ReunionServiceTest {
         assertThat(guardada.getContenidoTexto()).doesNotContain("<");
         assertThat(guardada.getContenidoTexto()).doesNotContain("base64");
         assertThat(guardada.getContenidoTexto()).contains("Puntos:").contains("uno");
+        assertThat(guardada.getIntervinientes()).containsExactly("Ana", "Luis");
         assertThat(creada.getTitulo()).isEqualTo("Reunion de seguimiento");
+    }
+
+    @Test
+    void actualizarSustituyeIntervinientesPorLaListaCompleta() {
+        when(repository.save(any(Reunion.class))).thenAnswer(inv -> inv.getArgument(0));
+        Reunion existente = new Reunion("Titulo", Instant.now(), null, List.of("Ana"), null, null);
+        when(repository.findById(1L)).thenReturn(Optional.of(existente));
+
+        ReunionRequestDto request = new ReunionRequestDto(
+                "Titulo", Instant.now(), null, List.of("Luis", "Marta"), null);
+
+        Reunion actualizada = service.actualizar(1L, request);
+
+        assertThat(actualizada.getIntervinientes()).containsExactly("Luis", "Marta");
     }
 
     @Test
