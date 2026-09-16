@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gestion-reuniones
+
+  datasource:
+    url: jdbc:h2:file:./data/reuniones;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+    show-sql: false
+
+  jackson:
+    default-property-inclusion: non_null
+
+logging:
+  level:
+    com.lineadirecta.reuniones: INFO
