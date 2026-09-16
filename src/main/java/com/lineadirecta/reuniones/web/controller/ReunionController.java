@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.Instant;
@@ -73,9 +74,11 @@ public class ReunionController {
     @PostMapping
     public ResponseEntity<ReunionDetalleDto> crear(@Valid @RequestBody ReunionRequestDto request) {
         Reunion creada = service.crear(request);
-        return ResponseEntity
-                .created(URI.create("/api/reuniones/" + creada.getId()))
-                .body(ReunionDetalleDto.desde(creada));
+        URI ubicacion = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(creada.getId())
+                .toUri();
+        return ResponseEntity.created(ubicacion).body(ReunionDetalleDto.desde(creada));
     }
 
     @PutMapping("/{id}")

@@ -38,6 +38,6 @@ start "%TITLE%" /min "%JAVA_EXE%" -jar "%JAR%"
 
 echo.
 echo Aplicacion lanzada en segundo plano (ventana minimizada "%TITLE%").
-echo Puede tardar unos segundos en estar lista. Abre http://localhost:%PORT% en el navegador.
+echo Puede tardar unos segundos en estar lista. Abre http://localhost:%PORT%/gestion-reuniones en el navegador.
 echo Usa stop.bat para detenerla.
 exit /b 0

@@ -25,7 +25,7 @@ herramientas (incluido Claude Code).
 > mvn spring-boot:run
 > ```
 
-La aplicación arranca en `http://localhost:8081` y muestra el calendario del mes actual.
+La aplicación arranca en `http://localhost:8081/gestion-reuniones` y muestra el calendario del mes actual.
 
 ## Construir el JAR ejecutable
 
@@ -56,7 +56,7 @@ Base path: `/api/reuniones`. CORS abierto (`*`) para uso desde cualquier herrami
 ### Crear una reunión
 
 ```bash
-curl -X POST http://localhost:8081/api/reuniones \
+curl -X POST http://localhost:8081/gestion-reuniones/api/reuniones \
   -H "Content-Type: application/json" \
   -d '{
     "titulo": "Reunión de arquitectura",
@@ -72,7 +72,7 @@ Devuelve `201 Created` con cabecera `Location: /api/reuniones/{id}`.
 ### Actualizar una reunión
 
 ```bash
-curl -X PUT http://localhost:8081/api/reuniones/1 \
+curl -X PUT http://localhost:8081/gestion-reuniones/api/reuniones/1 \
   -H "Content-Type: application/json" \
   -d '{
     "titulo": "Reunión de arquitectura (revisada)",
@@ -95,25 +95,25 @@ contenido e intervinientes):
 
 ```bash
 # Por rango de fechas
-curl "http://localhost:8081/api/reuniones?desde=2026-09-01T00:00:00Z&hasta=2026-09-30T23:59:59Z"
+curl "http://localhost:8081/gestion-reuniones/api/reuniones?desde=2026-09-01T00:00:00Z&hasta=2026-09-30T23:59:59Z"
 
 # Por título
-curl "http://localhost:8081/api/reuniones?titulo=arquitectura"
+curl "http://localhost:8081/gestion-reuniones/api/reuniones?titulo=arquitectura"
 
 # Combinado: título + rango de fechas + paginación
-curl "http://localhost:8081/api/reuniones?titulo=arquitectura&desde=2026-09-01T00:00:00Z&hasta=2026-09-30T23:59:59Z&page=0&size=10"
+curl "http://localhost:8081/gestion-reuniones/api/reuniones?titulo=arquitectura&desde=2026-09-01T00:00:00Z&hasta=2026-09-30T23:59:59Z&page=0&size=10"
 
 # Búsqueda global (OR entre título, contenido e intervinientes)
-curl "http://localhost:8081/api/reuniones?q=presupuesto"
+curl "http://localhost:8081/gestion-reuniones/api/reuniones?q=presupuesto"
 
 # Búsqueda global + interviniente (AND)
-curl "http://localhost:8081/api/reuniones?q=presupuesto&interviniente=carlos"
+curl "http://localhost:8081/gestion-reuniones/api/reuniones?q=presupuesto&interviniente=carlos"
 ```
 
 ### Obtener el detalle completo
 
 ```bash
-curl http://localhost:8081/api/reuniones/1
+curl http://localhost:8081/gestion-reuniones/api/reuniones/1
 ```
 
 ### Obtener solo el contenido en texto plano
@@ -121,19 +121,19 @@ curl http://localhost:8081/api/reuniones/1
 Útil para que Claude Code (u otra herramienta) lea las notas sin lidiar con HTML:
 
 ```bash
-curl http://localhost:8081/api/reuniones/1/contenido-texto
+curl http://localhost:8081/gestion-reuniones/api/reuniones/1/contenido-texto
 ```
 
 ### Reuniones en un rango de fechas (para pintar el calendario)
 
 ```bash
-curl "http://localhost:8081/api/reuniones/rango?desde=2026-09-01T00:00:00Z&hasta=2026-09-30T23:59:59Z"
+curl "http://localhost:8081/gestion-reuniones/api/reuniones/rango?desde=2026-09-01T00:00:00Z&hasta=2026-09-30T23:59:59Z"
 ```
 
 ### Eliminar
 
 ```bash
-curl -X DELETE http://localhost:8081/api/reuniones/1
+curl -X DELETE http://localhost:8081/gestion-reuniones/api/reuniones/1
 ```
 
 ## Uso desde Claude Code

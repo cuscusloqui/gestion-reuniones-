@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  const API_BASE = "/api/reuniones";
+  const API_BASE = "api/reuniones";
   const DIAS_SEMANA = ["L", "M", "X", "J", "V", "S", "D"];
   const HORAS_DIA = Array.from({ length: 24 }, (_, i) => i);
   const ALTURA_HORA_PX = 52;
