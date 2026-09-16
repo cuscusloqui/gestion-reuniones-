@@ -8,7 +8,7 @@ cd /d "%~dp0"
 
 set "JAR=target\gestion-reuniones.jar"
 set "TITLE=GestionReuniones"
-set "PORT=8080"
+set "PORT=8081"
 
 tasklist /V /FI "IMAGENAME eq java.exe" 2>nul | findstr /I "%TITLE%" >nul
 if not errorlevel 1 (

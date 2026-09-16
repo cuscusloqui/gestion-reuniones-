@@ -2,11 +2,11 @@
   "info": {
     "_postman_id": "b6a2a4b0-2f7a-4a3f-9a4a-5f6d3c0e2a11",
     "name": "Gestion de Reuniones - API REST",
-    "description": "Coleccion para consumir la API REST de la app de gestion de reuniones (local, sin autenticacion). Usa la variable {{baseUrl}} (por defecto http://localhost:8080). Al ejecutar 'Crear reunion' se guarda automaticamente el id devuelto en la variable de coleccion {{reunionId}}, que usan el resto de peticiones. 'intervinientes' es una lista de nombres (array JSON): en cada PUT se envia la lista completa deseada (añadir un nombre = incluirlo en el array; quitarlo = omitirlo).",
+    "description": "Coleccion para consumir la API REST de la app de gestion de reuniones (local, sin autenticacion). Usa la variable {{baseUrl}} (por defecto http://localhost:8081). Al ejecutar 'Crear reunion' se guarda automaticamente el id devuelto en la variable de coleccion {{reunionId}}, que usan el resto de peticiones. 'intervinientes' es una lista de nombres (array JSON): en cada PUT se envia la lista completa deseada (añadir un nombre = incluirlo en el array; quitarlo = omitirlo).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "baseUrl", "value": "http://localhost:8081", "type": "string" },
     { "key": "reunionId", "value": "", "type": "string" }
   ],
   "item": [
