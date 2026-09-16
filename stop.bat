@@ -8,7 +8,7 @@ rem puerto: podria ser un proceso de otro proyecto y no es seguro asumir que es 
 set "TITLE=GestionReuniones"
 
 set "PID="
-for /f "tokens=2 delims=," %%A in ('tasklist /V /FI "IMAGENAME eq java.exe" /FO CSV 2^>nul ^| findstr /I "%TITLE%"') do (
+for /f "tokens=2 delims=," %%A in ('tasklist /V /FI "IMAGENAME eq cmd.exe" /FO CSV 2^>nul ^| findstr /I "%TITLE%"') do (
     set "PID=%%~A"
 )
 
